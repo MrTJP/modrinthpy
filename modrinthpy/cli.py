@@ -29,6 +29,7 @@ def parse_args():
     new_ver = subparsers.add_parser('create-version', help='Create a new version for a project')
     new_ver.add_argument(
         '--name', '-n',
+        required=True,
         help='A friendly name for the new version')
     new_ver.add_argument(
         '--version', '-v',
