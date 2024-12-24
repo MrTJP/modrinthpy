@@ -147,6 +147,7 @@ class ModrinthClient:
             'name': name,
             'version_number': version_num,
             'changelog': change_log,
+            'dependencies': deps,
             'game_versions': game_versions,
             'version_type': version_type,
             'loaders': loaders,
@@ -157,8 +158,9 @@ class ModrinthClient:
             'file_parts': file_paths,
             'primary_file': file_paths[0]
         }
-        if deps:
-            data['dependencies'] = deps
+        
+        # Remove empty values
+        data = {k:v for k,v in data.items() if v not in [None, "", [], {}]}
 
         files = {
             'data': (None, json.dumps(data), 'application/json')
