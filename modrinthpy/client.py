@@ -1,5 +1,8 @@
 import requests
 import json
+import logging
+
+logger = logging.getLogger("ModrinthClient")
 
 class ModrinthClient:
     """
@@ -28,20 +31,28 @@ class ModrinthClient:
         headers = {}
         if self._key:
             headers['Authorization'] = self._key
-        response = requests.get(self._base_url + endpoint, headers=headers, **kwargs)
-        # Raise an HTTPError for bad responses (4xx and 5xx)
-        response.raise_for_status()
-        return response.json()
+        try:
+            response = requests.get(self._base_url + endpoint, headers=headers, **kwargs)
+            # Raise an HTTPError for bad responses (4xx and 5xx)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.HTTPError as e:
+            logger.error(f"HTTP error response: {response.json()}")
+            raise e
     
     def _post(self, endpoint, **kwargs):
         headers = {}
         if self._key:
             headers['Authorization'] = self._key
-        response = requests.post(self._base_url + endpoint, headers=headers, **kwargs)
-        # Raise an HTTPError for bad responses (4xx and 5xx)
-        response.raise_for_status()
-        return response.json()
-
+        try:
+            response = requests.post(self._base_url + endpoint, headers=headers, **kwargs)
+            # Raise an HTTPError for bad responses (4xx and 5xx)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.HTTPError as e:
+            logger.error(f"HTTP error response: {e.response.json()}")
+            raise e
+        
     def welcome(self):
         """
         Get the welcome message from the API

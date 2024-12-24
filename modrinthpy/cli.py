@@ -155,6 +155,11 @@ def main_create_version(args, client: ModrinthClient):
     with open(args.changelog_path, 'r') as f:
         changelog = f.read()
 
+    logger.info("Calling create_version...")
+    if args.dryrun:
+        logger.info("Dry run mode enabled, skipping call")
+        exit(0)
+
     # Upload version
     result = client.create_version(
         name=args.name,
